@@ -6,6 +6,12 @@ namespace Squid.UserApi.Repositories
     {
         IEnumerable<User> GetUsers();
         
-        User GetUser(Guid id);
+        User? GetUser(Guid id);
+
+        void CreateUser(User user);
+
+        void UpdateUser(User user);
+
+        void DeleteUser(Guid id);
     }
 }

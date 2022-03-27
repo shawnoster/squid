@@ -16,9 +16,26 @@ namespace Squid.UserApi.Repositories
             return users;
         }
 
-        public User GetUser(Guid id)
+        public User? GetUser(Guid id)
         {
-            return users.Where(user => user.Id == id).SingleOrDefault();
+            return this?.users.Where(user => user.Id == id).SingleOrDefault();
+        }
+
+        public void CreateUser(User user)
+        {
+            users.Add(user);
+        }
+
+        public void UpdateUser(User user)
+        {
+            var index = users.FindIndex(existingUser => existingUser.Id == user.Id);
+            users[index] = user;
+        }
+
+        public void DeleteUser(Guid id)
+        {
+            var index = users.FindIndex(existingUser => existingUser.Id == id);
+            users.RemoveAt(index);
         }
     }
 }

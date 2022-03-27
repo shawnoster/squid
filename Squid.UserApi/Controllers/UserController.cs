@@ -37,5 +37,58 @@ namespace Squid.UserApi.Controllers
 
             return user.AsDto();
         }
+
+        // POST /users
+        [HttpPost]
+        public ActionResult<UserDto> CreateUser(CreateUserDto userDto)
+        {
+            Entities.User user = new()
+            {
+                Id = Guid.NewGuid(),
+                Name = userDto.Name,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            repository.CreateUser(user);
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user.AsDto());
+        }
+
+        // PUT /users/{id}
+        [HttpPut("id")]
+        public ActionResult UpdateUser(Guid id, UpdateUserDto userDto)
+        {
+            var existingUser = repository.GetUser(id);
+
+            if (existingUser is null)
+            {
+                return NotFound();
+            }
+
+            Entities.User updatedUser = existingUser with 
+            {
+                Name = userDto.Name
+            };
+
+            repository.UpdateUser(updatedUser);
+
+            return NoContent();
+        }
+
+        // DEL /users/{id}
+        [HttpDelete("id")]
+        public ActionResult DeleteUser(Guid id)
+        {
+            var existingUser = repository.GetUser(id);
+
+            if (existingUser is null)
+            {
+                return NotFound();
+            }
+                        
+            repository.DeleteUser(id);
+
+            return NoContent();
+        }
     }
 }
